@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/sprites/score.png" type="Texture" id=1]
+[ext_resource path="res://scripts/Score.cs" type="Script" id=2]
+
+[node name="Score" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+visible = false
+texture = ExtResource( 1 )
+hframes = 4
+vframes = 3

@@ -1,0 +1,56 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/fonts/nintendo-nes-font.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://assets/textures/title.png" type="Texture" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+size = 8
+extra_spacing_bottom = -3
+font_data = ExtResource( 1 )
+
+[node name="Title" type="Node2D"]
+
+[node name="Back" type="ColorRect" parent="."]
+margin_right = 256.0
+margin_bottom = 240.0
+
+[node name="Shadow" type="ColorRect" parent="."]
+margin_left = 48.0
+margin_top = 32.0
+margin_right = 216.0
+margin_bottom = 80.0
+color = Color( 0.219608, 0.411765, 0, 1 )
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_left = 40.0
+margin_top = 24.0
+margin_right = 208.0
+margin_bottom = 72.0
+texture = ExtResource( 2 )
+
+[node name="Copyright" type="Label" parent="."]
+margin_left = 96.0
+margin_top = 80.0
+margin_right = 216.0
+margin_bottom = 88.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 1 )
+text = "2023 SFGD GAMES"
+
+[node name="Options" type="Label" parent="."]
+margin_left = 88.0
+margin_top = 168.0
+margin_right = 168.0
+margin_bottom = 176.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 1 )
+text = "PUSH START"
+
+[node name="TopScore" type="Label" parent="."]
+margin_left = 88.0
+margin_top = 224.0
+margin_right = 168.0
+margin_bottom = 232.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 1 )
+text = "TOP-000000"
