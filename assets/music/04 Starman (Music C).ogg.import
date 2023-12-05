@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/04 Starman (Music C).ogg-550adaa1624335d2f7fea7c355c46a7c.oggstr"
+
+[deps]
+
+source_file="res://assets/music/04 Starman (Music C).ogg"
+dest_files=[ "res://.import/04 Starman (Music C).ogg-550adaa1624335d2f7fea7c355c46a7c.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0
