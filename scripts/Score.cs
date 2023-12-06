@@ -1,8 +1,7 @@
 using Godot;
 using System;
 
-public class Score : Node2D
-{
+public class Score : Node2D {
     private Sprite s;
 
     public int baseFrame = -1;

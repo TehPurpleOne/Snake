@@ -11,5 +11,5 @@ dest_files=[ "res://.import/6 - Type-B Stage Clear.ogg-623c1f35ea7f40f123db1e1d6
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0

@@ -2,13 +2,12 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class Game : Node2D
-{
+public class Game : Node2D {
+    private Master m;
     private TileMap map;
-    private ColorRect ready;
-    private ColorRect gOver;
     private Label baseText;
     private Label scoreText;
+    private Label bugText;
     private Label multiText;
     private Label infoText;
     private AudioStreamPlayer heart;
@@ -30,21 +29,22 @@ public class Game : Node2D
     private int maxSpeed = 180;
     private int deadTicker = 0;
     private int score = 0;
+    private int bugs = 0;
     private int multiplier = 3;
     private int multiplierTicker = 180;
     private int infoTicker = 0;
 
-    public enum States {NULL, INIT, MOVE, DYING, GAMEOVER}
+    public enum States {NULL, INIT, READY, MOVE, DYING, GAMEOVER, CLEAR}
     private States currentState = States.NULL;
     private States previousState = States.NULL;
 
     public override void _Ready() {
+        m = (Master)GetNode("/root/Master");
         map = (TileMap)GetNode("Graphic/Objects");
-        ready = (ColorRect)GetNode("Graphic/Ready");
-        gOver = (ColorRect)GetNode("Graphic/GameOver");
         baseText = (Label)GetNode("Graphic/BaseText");
         scoreText = (Label)GetNode("Graphic/BaseText/Score");
         multiText = (Label)GetNode("Graphic/BaseText/Multiplier");
+        bugText = (Label)GetNode("Graphic/BaseText/Bugs");
         infoText = (Label)GetNode("Graphic/BaseText/Info");
 
         SetState(States.INIT);
@@ -86,10 +86,10 @@ public class Game : Node2D
     private void StateLogic(float delta) {
         switch(currentState) {
             case States.MOVE:
-            case States.INIT:
+            case States.READY:
                 speed--;
 
-                if(currentState != States.INIT) {
+                if(currentState != States.READY) {
                     multiplierTicker--;
 
                     if(multiplierTicker == 0 && multiplier > 1) {
@@ -110,14 +110,15 @@ public class Game : Node2D
                     deadTicker++;
 
                     if(deadTicker % 8 == 0 && segments.Count == 0 && headPosition != Vector2.One * 99) {
-                        //segBoom.Play();
+                        m.PlaySFX(2);
                         SpawnBoom(headPosition);
                         headPosition = Vector2.One * 99;
+                        deadTicker = 0;
                     }
 
                     if(deadTicker % 8 == 0 && segments.Count > 0) {
                         heartPosition = Vector2.One * 99;
-                        //segBoom.Play();
+                        m.PlaySFX(2);
                         SpawnBoom(segments[0]);
                         segments.RemoveAt(0);
                     }
@@ -132,6 +133,10 @@ public class Game : Node2D
         }
 
         if(infoTicker == 0 && infoText.Text != "") {
+            if(m.gameover) {
+                m.nextScene = true;
+            }
+
             infoText.Text ="";
         }
     }
@@ -139,6 +144,12 @@ public class Game : Node2D
     public States GetTransition() {
         switch(currentState) {
             case States.INIT:
+                if(m.currentState == Master.States.RUN) {
+                    return States.READY;
+                }
+                break;
+            
+            case States.READY:
                 if(speed == 0) {
                     return States.MOVE;
                 }
@@ -151,7 +162,7 @@ public class Game : Node2D
                 break;
             
             case States.DYING:
-                if(segments.Count == 0 && headPosition == Vector2.One * 99) {
+                if(segments.Count == 0 && headPosition == Vector2.One * 99 && deadTicker == 30) {
                     return States.GAMEOVER;
                 }
                 break;
@@ -162,8 +173,35 @@ public class Game : Node2D
 
     private void EnterState(States newState, States oldState) {
         switch(newState) {
-            case States.INIT:
-                //music.Play();
+            case States.READY:
+                // Play the music needed.
+                switch(m.musicType) {
+                    case 0:
+                        m.PlayMusic(1);
+                        break;
+                    
+                    case 1:
+                        m.PlayMusic(2);
+                        break;
+                    
+                    case 2:
+                        m.PlayMusic(3);
+                        break;
+                }
+
+                // Update the base text.
+                switch(m.gameType) {
+                    case 0:
+                        baseText.Text = "TYPE-A";
+                        break;
+                    
+                    case 1:
+                        baseText.Text = "TYPE-B";
+                        break;
+                }
+
+                baseText.Text += "\n\n\nLVL-\n\n\nSCORE\n\n\n\nMULTI\n\n\n\nBUGS\n\n\n\nSPEED";
+
                 // Set the heart's position at random.
                 SetHeartPosition();
 
@@ -172,12 +210,16 @@ public class Game : Node2D
                 segments.Add(headPosition + (Vector2.Down * 2));
                 segments.Add(headPosition + (Vector2.Down));
                 UpdateSegments();
+
+                // Display "READY!"
+                infoText.Text = "READY!";
+                infoTicker = 180;
                 break;
             
             case States.MOVE:
                 // Check to see if the head of the snake is within the bounds of the map.
                 Vector2 desired = headPosition + direction;
-                Rect2 boundary = new Rect2(new Vector2(2, 4), new Vector2(20, 20));
+                Rect2 boundary = new Rect2(new Vector2(2, 7), new Vector2(20, 20));
                 lastDirection = direction;
                 bool boundCheck = !boundary.HasPoint(desired);
                 bool overlapCheck = segments.Contains(desired);
@@ -189,7 +231,7 @@ public class Game : Node2D
 
                 // Check to see if the heart was picked up.
                 if(heartPosition == desired) {
-                    //heart.Play();
+                    m.PlaySFX(0);
                     SetHeartPosition();
 
                     maxSegments++;
@@ -200,6 +242,9 @@ public class Game : Node2D
                     score += 10 * multiplier;
                     scoreText.Text = Convert.ToString(score);
                     SpawnPoints(multiplier);
+
+                    bugs++;
+                    bugText.Text = Convert.ToString(bugs);
 
                     multiplier = 3;
                     multiplierTicker = 180;
@@ -221,24 +266,25 @@ public class Game : Node2D
                 break;
             
             case States.DYING:
-                //music.Stop();
-                //dead.Play();
+                m.StopMusic();
+                m.PlaySFX(1);
                 maxSpeed = 30;
                 infoText.Text = "OH NO!";
                 infoTicker = 240;
                 break;
             
             case States.GAMEOVER:
-                //gameover.Play();
-                gOver.Show();
+                m.PlayMusic(6);
+                m.gameover = true;
+                infoText.Text = "GAME  OVER";
+                infoTicker = 600;
                 break;
         }
     }
 
     private void ExitState(States oldState, States newState) {
         switch(oldState) {
-            case States.INIT:
-                ready.Hide();
+            case States.READY:
                 direction = Vector2.Up;
                 reverse = Vector2.Down;
                 maxSpeed = 20;
@@ -259,7 +305,7 @@ public class Game : Node2D
     private void SetHeartPosition() {
         Random RNGesus = new Random();
         float x = RNGesus.Next(2, 21);
-        float y = RNGesus.Next(4, 23);
+        float y = RNGesus.Next(7, 26);
         heartPosition = new Vector2(x, y);
 
         // Makes sure the heart isn't placed on a segment.
@@ -268,7 +314,7 @@ public class Game : Node2D
             bool b = segments.Contains(heartPosition);
 
             x = RNGesus.Next(2, 21);
-            y = RNGesus.Next(4, 23);
+            y = RNGesus.Next(7, 26);
             heartPosition = new Vector2(x, y);
         }
 
