@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/14 - Flower No Intro.ogg-d1e31ebdca99424e3128d120c7bd104b.oggstr"
+
+[deps]
+
+source_file="res://assets/music/14 - Flower No Intro.ogg"
+dest_files=[ "res://.import/14 - Flower No Intro.ogg-d1e31ebdca99424e3128d120c7bd104b.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

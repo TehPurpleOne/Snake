@@ -1,21 +1,28 @@
 using Godot;
 using System;
 
-public class Master : Node2D
-{
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
+public class Master : Node2D {
+    private Control gameRoot;
+    private ColorRect crt;
+    private AnimationPlayer anim;
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        
+    public enum States {NULL, INIT, FADEINT, FADEOUT, LOADNEXT, RUN};
+    public States currentState = States.NULL;
+    private States previousState = States.NULL;
+
+    private Vector2 gameRes = new Vector2(256, 240);
+    public int scale = 3;
+    [Export] public int _scale {
+        get{return scale;}
+        set{scale = value;
+        ResizeWindow(scale);}
     }
+    public bool crtShader = true;
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+    public int gameType = 0;
+    public int musicType = 0;
+    public int speed = 0;
+
+
+
 }

@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/2 - Mushroom (Music A).ogg-268eb751dc6ac4e27c5d4c53341a78d7.oggstr"
+
+[deps]
+
+source_file="res://assets/music/2 - Mushroom (Music A).ogg"
+dest_files=[ "res://.import/2 - Mushroom (Music A).ogg-268eb751dc6ac4e27c5d4c53341a78d7.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

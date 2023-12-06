@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/15 - Starman No Intro.ogg-569fbf942cc8235d47064ea107475c60.oggstr"
+
+[deps]
+
+source_file="res://assets/music/15 - Starman No Intro.ogg"
+dest_files=[ "res://.import/15 - Starman No Intro.ogg-569fbf942cc8235d47064ea107475c60.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

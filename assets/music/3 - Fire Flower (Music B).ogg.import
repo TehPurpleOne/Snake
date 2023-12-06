@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/3 - Fire Flower (Music B).ogg-80d83960ef67a477755db865da80b8bd.oggstr"
+
+[deps]
+
+source_file="res://assets/music/3 - Fire Flower (Music B).ogg"
+dest_files=[ "res://.import/3 - Fire Flower (Music B).ogg-80d83960ef67a477755db865da80b8bd.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0
