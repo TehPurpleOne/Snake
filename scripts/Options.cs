@@ -32,7 +32,7 @@ public class Options : Node2D {
         SetState(States.INIT);
     }
 
-    public override void _Input(InputEvent @event) {
+/*     public override void _Input(InputEvent @event) {
         if(currentState != States.RUN) {
             return;
         }
@@ -57,7 +57,7 @@ public class Options : Node2D {
             int last;
 
             // There's two ways you can tackle the menu options. Below is the first and most line-consuming.
-            /* switch(menu) {
+            switch(menu) {
                 case 0:
                     last = subMenu[0];
                     subMenu[0] += x;
@@ -90,7 +90,7 @@ public class Options : Node2D {
                         UpdatePositions();
                     }
                     break;
-            } */
+            }
 
             // The second is a bit more advanced, but saves a bit of code.
             for(int i = 0; i < subMenu.Length; i++) {
@@ -110,7 +110,7 @@ public class Options : Node2D {
         if(Input.IsActionJustPressed("ui_accept")) {
             m.nextScene = true;
         }
-    }
+    } */
 
     public override void _PhysicsProcess(float delta) {
         if(currentState != States.NULL) {
@@ -125,6 +125,39 @@ public class Options : Node2D {
     private void StateLogic(float delta) {
         switch(currentState) {
             case States.RUN:
+                // Process input.
+                if(m.menuDirection.y != 0) {
+                    int last = menu;
+
+                    menu += (int)m.menuDirection.y;
+                    menu = Mathf.Clamp(menu, 0, 2);
+
+                    if(menu != last) {
+                        m.PlaySFX(3);
+                        UpdateMenu();
+                    }
+                }
+
+                if(m.menuDirection.x != 0) {
+                    int last;
+                    for(int i = 0; i < subMenu.Length; i++) {
+                        if(menu == i) {
+                            last = subMenu[i];
+                            subMenu[i] += (int)m.menuDirection.x;
+                            subMenu[i] = Mathf.Clamp(subMenu[i], 0, i + 1); 
+
+                            if(last != subMenu[i]) {
+                                m.PlaySFX(3);
+                                UpdatePositions();
+                            }
+                        }
+                    }
+                }
+
+                if(m.accept || m.pause) {
+                    m.nextScene = true;
+                }
+
                 actionTicker++;
 
                 if(actionTicker % 8 == 0) {
@@ -225,7 +258,7 @@ public class Options : Node2D {
 
             switch(subMenu[0]) {
                 case 0:
-                    infoText.Text = "ENDLESS MODE! SPEED\nINCREASES OVER TIME!";
+                    infoText.Text = "GO FOR THE HIGHEST\nSCORE!";
                     break;
                 
                 case 1:

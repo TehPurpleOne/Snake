@@ -18,32 +18,32 @@ margin_bottom = 240.0
 
 [node name="Shadow" type="ColorRect" parent="."]
 margin_left = 48.0
-margin_top = 56.0
+margin_top = 48.0
 margin_right = 216.0
-margin_bottom = 104.0
+margin_bottom = 96.0
 color = Color( 0.219608, 0.411765, 0, 1 )
 
 [node name="TextureRect" type="TextureRect" parent="."]
 margin_left = 40.0
-margin_top = 48.0
+margin_top = 40.0
 margin_right = 208.0
-margin_bottom = 96.0
+margin_bottom = 88.0
 texture = ExtResource( 2 )
 
 [node name="Copyright" type="Label" parent="."]
 margin_left = 96.0
-margin_top = 104.0
+margin_top = 96.0
 margin_right = 216.0
-margin_bottom = 112.0
+margin_bottom = 104.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 1 )
 text = "2023 SFGD GAMES"
 
 [node name="Options" type="Label" parent="."]
 margin_left = 88.0
-margin_top = 192.0
+margin_top = 200.0
 margin_right = 168.0
-margin_bottom = 200.0
+margin_bottom = 208.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 1 )
 text = "PUSH START"
@@ -66,7 +66,6 @@ margin_right = 112.0
 margin_bottom = 32.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 1 )
-text = "000000"
 
 [node name="TypeB" type="Label" parent="."]
 margin_left = 200.0
@@ -75,4 +74,3 @@ margin_right = 248.0
 margin_bottom = 32.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 1 )
-text = "000000"

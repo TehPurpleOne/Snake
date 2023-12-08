@@ -1,54 +1,149 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://assets/tilesets/tiles.png" type="Texture" id=1]
+[ext_resource path="res://assets/tilesets/tiles_gray.png" type="Texture" id=1]
 
 [node name="Tiles" type="Node2D"]
 
 [node name="00" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-hframes = 10
+hframes = 29
 
 [node name="01" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-hframes = 10
+hframes = 29
 frame = 1
 
 [node name="02" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-hframes = 10
+hframes = 29
 frame = 2
 
 [node name="03" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-hframes = 10
+hframes = 29
 frame = 3
 
 [node name="04" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-hframes = 10
+hframes = 29
 frame = 4
 
 [node name="05" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-hframes = 10
+hframes = 29
 frame = 5
 
 [node name="06" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-hframes = 10
+hframes = 29
 frame = 6
 
 [node name="07" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-hframes = 10
+hframes = 29
 frame = 7
 
 [node name="08" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-hframes = 10
+hframes = 29
 frame = 8
 
 [node name="09" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-hframes = 10
+hframes = 29
 frame = 9
+
+[node name="10" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 10
+
+[node name="11" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 11
+
+[node name="12" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 12
+
+[node name="13" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 13
+
+[node name="14" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 14
+
+[node name="15" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 15
+
+[node name="16" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 16
+
+[node name="17" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 17
+
+[node name="18" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 18
+
+[node name="19" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 19
+
+[node name="20" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 20
+
+[node name="21" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 21
+
+[node name="22" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 22
+
+[node name="23" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 23
+
+[node name="24" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 24
+
+[node name="25" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 25
+
+[node name="26" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 26
+
+[node name="27" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 27
+
+[node name="28" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 29
+frame = 28

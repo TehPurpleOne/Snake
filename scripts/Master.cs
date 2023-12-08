@@ -18,11 +18,24 @@ public class Master : Node2D {
     private Vector2 gameRes = new Vector2(256, 240);
     public int scale = 1;
 
+    public Vector2 menuDirection = Vector2.Zero;
+    public Vector2 direction = Vector2.Zero;
+    public Vector2 reverse = Vector2.Zero;
+    public bool accept = false;
+    public bool pause = false;
+
     public int gameType = 0;
     public int musicType = 0;
     public int speed = 0;
-    public bool gameover;
+    public int level = 1;
+    public bool gameover = false;
     public bool nextScene = false;
+
+    public int score = 0;
+    public int topScoreA = 0;
+    public int topScoreB = 0;
+
+    private float songPosition = 0;
 
     public override void _Ready() {
         gameRoot = (Control)GetNode("ViewportContainer/Viewport/GameRoot");
@@ -36,6 +49,61 @@ public class Master : Node2D {
         SetState(States.INIT);
     }
 
+    public void GetInput() {
+        if(Input.IsActionJustPressed("ui_up")) {
+            menuDirection = Vector2.Up;
+        } else if(Input.IsActionJustPressed("ui_down")) {
+            menuDirection = Vector2.Down;
+        } else if(Input.IsActionJustPressed("ui_left")) {
+            menuDirection = Vector2.Left;
+        } else if(Input.IsActionJustPressed("ui_right")) {
+            menuDirection = Vector2.Right;
+        } else {
+            menuDirection = Vector2.Zero;
+        }
+
+        if(Input.IsActionJustPressed("ui_up") && reverse != Vector2.Up) {
+            direction = Vector2.Up;
+        } else if(Input.IsActionJustPressed("ui_down") && reverse != Vector2.Down) {
+            direction = Vector2.Down;
+        } else if(Input.IsActionJustPressed("ui_left") && reverse != Vector2.Left) {
+            direction = Vector2.Left;
+        } else if(Input.IsActionJustPressed("ui_right") && reverse != Vector2.Right) {
+            direction = Vector2.Right;
+        } else {
+            direction = Vector2.Zero;
+        }
+
+        bool gameScene = gameRoot.GetChild(0).GetType() == typeof(Game) && (Game.States)gameRoot.GetChild(0).Get("currentState") == Game.States.MOVE;
+
+        if(reverse != -direction && direction != Vector2.Zero) {
+            reverse = -direction;
+        }
+
+        GD.Print(direction,", ",reverse);
+
+        accept = Input.IsActionJustPressed("ui_accept");
+
+        pause = Input.IsActionJustPressed("ui_pause");
+
+        if(pause && gameScene) {
+            
+            if(!GetTree().Paused) {
+                PlaySFX(4);
+                gameRoot.GetChild(0).Call("UpdateInfoBox", 5, 1 );
+                songPosition = currentSong.GetPlaybackPosition();
+                currentSong.Stop();
+            }
+
+            if(GetTree().Paused) {
+                currentSong.Play();
+                currentSong.Seek(songPosition);
+            }
+
+            GetTree().Paused = !GetTree().Paused;
+        }
+    }
+
     public override void _PhysicsProcess(float delta) {
         if(currentState != States.NULL) {
             StateLogic(delta);
@@ -47,7 +115,11 @@ public class Master : Node2D {
     }
 
     private void StateLogic(float delta) {
-        
+        switch(currentState) {
+            case States.RUN:
+                GetInput();
+                break;
+        }
     }
 
     private States GetTransition() {
@@ -94,6 +166,7 @@ public class Master : Node2D {
                                 break;
                             
                             case false:
+                                IncrementLevel();
                                 path = "res://scenes/Game.tscn";
                                 break;
                         }
@@ -130,6 +203,11 @@ public class Master : Node2D {
         // Play a sound effect.
         Node path = (Node)GetNode("Audio/SFX");
         AudioStreamPlayer sfx = (AudioStreamPlayer)path.GetChild(child);
+
+        if(sfx.Playing) {
+            sfx.Stop();
+        }
+
         sfx.Play();
     }
 
@@ -187,5 +265,10 @@ public class Master : Node2D {
                 SetState(States.LOADNEXT);
                 break;
         }
+    }
+
+    public void IncrementLevel() {
+        level++;
+        level = Mathf.Clamp(level, 0, 99);
     }
 }

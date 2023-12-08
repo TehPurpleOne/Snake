@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/background_pal.png-6f0feb27a1fe7991f7d52a8f29505580.stex"
+path="res://.import/tiles_gray.png-4dfe4298d7e962fe0653b75dfb46d044.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/shaders/background_pal.png"
-dest_files=[ "res://.import/background_pal.png-6f0feb27a1fe7991f7d52a8f29505580.stex" ]
+source_file="res://assets/tilesets/tiles_gray.png"
+dest_files=[ "res://.import/tiles_gray.png-4dfe4298d7e962fe0653b75dfb46d044.stex" ]
 
 [params]
 
