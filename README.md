@@ -34,7 +34,7 @@ This example is free for anyone to use and is commented to explain how everythin
 ## Credits
 Programmer: Strider
 
-Sound Designer: Game Freak, Strider, tomeyro (SFRX plugin for Godot)
+Sound Designer: Game Freak, Strider, tomeyro (SFXR plugin for Godot)
 
 Graphics: Strider
 
