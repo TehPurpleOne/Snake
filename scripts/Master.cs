@@ -22,12 +22,13 @@ public class Master : Node2D {
     public Vector2 direction = Vector2.Zero;
     public Vector2 reverse = Vector2.Zero;
     public bool accept = false;
+    public bool acceptHold = false;
     public bool pause = false;
 
     public int gameType = 0;
     public int musicType = 0;
     public int speed = 0;
-    public int level = 1;
+    public int level = 0;
     public bool gameover = false;
     public bool nextScene = false;
 
@@ -50,6 +51,8 @@ public class Master : Node2D {
     }
 
     public void GetInput() {
+
+        // Options Menu
         if(Input.IsActionJustPressed("ui_up")) {
             menuDirection = Vector2.Up;
         } else if(Input.IsActionJustPressed("ui_down")) {
@@ -62,27 +65,27 @@ public class Master : Node2D {
             menuDirection = Vector2.Zero;
         }
 
-        if(Input.IsActionJustPressed("ui_up") && reverse != Vector2.Up) {
+        acceptHold = Input.IsActionPressed("ui_accept");
+        accept = Input.IsActionJustPressed("ui_accept");
+
+        // Game scene
+        bool gameScene = gameRoot.GetChild(0).GetType() == typeof(Game) && (Game.States)gameRoot.GetChild(0).Get("currentState") == Game.States.MOVE;
+
+        if(Input.IsActionPressed("ui_up") && reverse != Vector2.Up) {
             direction = Vector2.Up;
-        } else if(Input.IsActionJustPressed("ui_down") && reverse != Vector2.Down) {
+        } else if(Input.IsActionPressed("ui_down") && reverse != Vector2.Down) {
             direction = Vector2.Down;
-        } else if(Input.IsActionJustPressed("ui_left") && reverse != Vector2.Left) {
+        } else if(Input.IsActionPressed("ui_left") && reverse != Vector2.Left) {
             direction = Vector2.Left;
-        } else if(Input.IsActionJustPressed("ui_right") && reverse != Vector2.Right) {
+        } else if(Input.IsActionPressed("ui_right") && reverse != Vector2.Right) {
             direction = Vector2.Right;
         } else {
             direction = Vector2.Zero;
         }
 
-        bool gameScene = gameRoot.GetChild(0).GetType() == typeof(Game) && (Game.States)gameRoot.GetChild(0).Get("currentState") == Game.States.MOVE;
-
         if(reverse != -direction && direction != Vector2.Zero) {
             reverse = -direction;
         }
-
-        GD.Print(direction,", ",reverse);
-
-        accept = Input.IsActionJustPressed("ui_accept");
 
         pause = Input.IsActionJustPressed("ui_pause");
 

@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 public class Game : Node2D {
     private Master m;
     private TileMap map;
+    private AnimatedSprite tongue;
     private Label baseText;
     private Label levelText;
     private Label scoreText;
@@ -13,14 +14,7 @@ public class Game : Node2D {
     private Label multiText;
     private Label speedText;
     private Label infoText;
-    private AudioStreamPlayer heart;
-    private AudioStreamPlayer dead;
-    private AudioStreamPlayer segBoom;
-    private AudioStreamPlayer music;
-    private AudioStreamPlayer gameover;
 
-    private int heartID = 0;
-    private int segmentID = 1;
     private int maxSegments = 3;
     private List<Vector2> heartPositions = new List<Vector2>();
     private int maxHearts = 0;
@@ -33,7 +27,6 @@ public class Game : Node2D {
     private int speed = 180;
     private int maxSpeed = 180;
     private int deadTicker = 0;
-    private int score = 0;
     private int bugs = 0;
     private int multiplier = 3;
     private int multiplierTicker = 180;
@@ -46,6 +39,7 @@ public class Game : Node2D {
     public override void _Ready() {
         m = (Master)GetNode("/root/Master");
         map = (TileMap)GetNode("Graphic/Objects");
+        tongue = (AnimatedSprite)GetNode("Graphic/Tongue");
         baseText = (Label)GetNode("Graphic/BaseText");
         levelText = (Label)GetNode("Graphic/BaseText/Level");
         scoreText = (Label)GetNode("Graphic/BaseText/Score");
@@ -101,14 +95,16 @@ public class Game : Node2D {
                 if(speed == 0) {
                     deadTicker++;
 
-                    if(deadTicker % 8 == 0 && segments.Count == 0 && headPosition != Vector2.One * 99) {
+                    if(deadTicker % 8 == 0 && segments.Count == 0 && headPosition != Vector2.One * 99
+                        || m.acceptHold && segments.Count == 0 && headPosition != Vector2.One * 99) {
                         m.PlaySFX(2);
                         SpawnBoom(headPosition);
                         headPosition = Vector2.One * 99;
                         deadTicker = 0;
                     }
 
-                    if(deadTicker % 8 == 0 && segments.Count > 0) {
+                    if(deadTicker % 8 == 0 && segments.Count > 0
+                        || m.acceptHold && segments.Count > 0) {
                         if(heartPositions.Count > 0) {
                             heartPositions.Clear();
                         }
@@ -173,6 +169,10 @@ public class Game : Node2D {
     private void EnterState(States newState, States oldState) {
         switch(newState) {
             case States.READY:
+                // Reset the input direction and reverse. This is so the player isn't defaulted to moving up if they wish to turn immediately.
+                m.direction = Vector2.Zero;
+                m.reverse = Vector2.Zero;
+
                 // Play the music needed.
                 switch(m.musicType) {
                     case 0:
@@ -221,6 +221,10 @@ public class Game : Node2D {
                 break;
             
             case States.MOVE:
+                // Show the tongue if hidden.
+                if(!tongue.Visible) {
+                    tongue.Show();
+                }
                 // Check to see if the head of the snake is within the bounds of the map.
                 Vector2 desired = headPosition + direction;
                 Rect2 boundary = new Rect2(new Vector2(2, 7), new Vector2(20, 20));
@@ -229,6 +233,9 @@ public class Game : Node2D {
                 bool overlapCheck = segments.Contains(desired);
 
                 if(boundCheck || overlapCheck) {
+                    if(overlapCheck) {
+                        UpdateHeadPosition(desired);
+                    }
                     SetState(States.DYING);
                     return;
                 }
@@ -314,17 +321,14 @@ public class Game : Node2D {
                 }
 
                 // Update the snake's position.
-                segments.Add(headPosition);
-                if(segments.Count > maxSegments) {
-                    segments.RemoveAt(0);
-                }
-                headPosition = desired;
+                UpdateHeadPosition(desired);
 
                 // Update the tilemap.
                 UpdateSegments();
                 break;
             
             case States.DYING:
+                tongue.Hide();
                 m.StopMusic();
                 m.PlaySFX(1);
                 maxSpeed = 30;
@@ -338,6 +342,7 @@ public class Game : Node2D {
                 break;
             
             case States.CLEAR:
+                tongue.Stop();
                 m.PlayMusic(4);
                 UpdateInfoBox(4, 400);
                 break;
@@ -347,9 +352,11 @@ public class Game : Node2D {
     private void ExitState(States oldState, States newState) {
         switch(oldState) {
             case States.READY:
-                direction = Vector2.Up;
-                reverse = -direction;
-                m.reverse = -direction;
+                if(m.direction == Vector2.Zero || m.direction == Vector2.Down) {
+                    direction = Vector2.Up;
+                    reverse = -direction;
+                    m.reverse = -direction;
+                }
                 
                 maxSpeed = 30 - (m.speed * 10);
                 break;
@@ -364,6 +371,14 @@ public class Game : Node2D {
         EnterState(currentState, previousState);
 
         speed = maxSpeed;
+    }
+
+    private void UpdateHeadPosition(Vector2 desired) {
+        segments.Add(headPosition);
+        if(segments.Count > maxSegments) {
+            segments.RemoveAt(0);
+        }
+        headPosition = desired;
     }
 
     private void SetHeartPosition() {
@@ -403,21 +418,28 @@ public class Game : Node2D {
         switch(direction) {
             case Vector2 v when direction == Vector2.Up:
                 headID = 20;
+                tongue.RotationDegrees = 0;
                 break;
             
             case Vector2 v when direction == Vector2.Down:
                 headID = 21;
+                tongue.RotationDegrees = 180;
                 break;
             
             case Vector2 v when direction == Vector2.Left:
                 headID = 22;
+                tongue.RotationDegrees = 270;
                 break;
             
             case Vector2 v when direction == Vector2.Right:
                 headID = 23;
+                tongue.RotationDegrees = 90;
                 break;
         }
         map.SetCellv(headPosition, headID);
+
+        // Set tongue position.
+        tongue.Position = map.MapToWorld(headPosition + direction) + map.CellSize / 2;
 
         //Set the body segments and tail.
         Vector2 butt = Vector2.Zero;
@@ -485,7 +507,7 @@ public class Game : Node2D {
                 points.baseFrame = 8;
                 break;
         }
-        points.GlobalPosition = map.MapToWorld(headPosition) + map.CellSize / 2;
+        points.GlobalPosition = map.MapToWorld(headPosition + direction) + map.CellSize / 2;
     }
 
     private void UpdateText() {
